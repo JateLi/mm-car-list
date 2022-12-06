@@ -1,10 +1,10 @@
 import "./App.css";
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Context } from "./Context";
-import List from "./pages/List";
-import Add from "./pages/Add";
-import Edit from "./pages/Edit";
+import ListPage from "./pages/ListPage";
+import AddPage from "./pages/AddPage";
+import EditPage from "./pages/EditPage";
 
 function App() {
   const [context, setContext] = useState("");
@@ -14,23 +14,10 @@ function App() {
       <div className="App">
         <Router>
           <div>
-            <nav>
-              <ul>
-                <li>
-                  <Link to="/list">Home</Link>
-                </li>
-                <li>
-                  <Link to="/add">About</Link>
-                </li>
-                <li>
-                  <Link to="/edit">Users</Link>
-                </li>
-              </ul>
-            </nav>
             <Routes>
-              <Route path="/list" element={<List />} />
-              <Route path="/add" element={<Add />} />
-              <Route path="/edit" element={<Edit />} />
+              <Route path="/list" element={<ListPage />} />
+              <Route path="/add" element={<AddPage />} />
+              <Route path="/edit/:carId" element={<EditPage />} />
             </Routes>
           </div>
         </Router>

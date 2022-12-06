@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ListItem from "../components/ListItem/ListItem";
 import Loader from "../components/Loader/Loader";
 import DateRangePicker from "../components/DateRangePicker/DateRangePicker";
 import DropDownSelector from "../components/DropDownSelector";
+import { carsApi } from "../Api";
 
-export default function List() {
+export default function ListPage() {
+  const navigate = useNavigate();
   const [carsData, setCarsData] = useState();
   const [startDate, setStartDate] = useState("2015");
   const [endDate, setEndDate] = useState("2022");
@@ -12,7 +15,6 @@ export default function List() {
 
   // Fetch cars data if the local cars data is null.
   useEffect(() => {
-    const carsApi = `https://testapi.io/api/jeanpralo/cars`;
     setLoading(true);
 
     const localCarList = JSON.parse(localStorage.getItem("CarsList"));
@@ -27,7 +29,6 @@ export default function List() {
       const data = await (await fetch(carsApi)).json();
       setLoading(false);
       setCarsData(data);
-      console.log("API fetching");
       localStorage.setItem("CarsList", JSON.stringify(data));
     };
 
@@ -46,14 +47,17 @@ export default function List() {
       >
         Clear Local Storage
       </button>
-      <h1 className="text-3xl font-bold underline">Car List</h1>
+      <h1 className="text-3xl font-bold">Car List</h1>
 
       <div
         className={
           "flex flex-row justify-evenly items-center py-5 border-b-2 border-black"
         }
       >
-        <DropDownSelector optionsList={["test", "mock"]} />
+        <DropDownSelector
+          type={"Transmission"}
+          optionsList={["automatic", "manual	"]}
+        />
         <DateRangePicker
           startDate={startDate}
           endDate={endDate}
@@ -64,7 +68,7 @@ export default function List() {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           type="button"
           onClick={() => {
-            console.log("tetestest");
+            navigate("/add");
           }}
         >
           + Add
@@ -90,6 +94,9 @@ export default function List() {
               model={item.model}
               year={item.year}
               transmission={item.transmission}
+              onClickEdit={() => {
+                navigate(`/edit/${item.id}`);
+              }}
             />
           ))}
         </tbody>

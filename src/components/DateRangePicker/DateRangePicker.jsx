@@ -1,26 +1,8 @@
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
-import { BsFillCalendarWeekFill } from "react-icons/bs";
-import { IconContext } from "react-icons";
 import { stringToDate } from "../../utils/utils";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./DateRangePicker.module.css";
-
-const CalenderIcon = () => (
-  <div>
-    <IconContext.Provider
-      value={{
-        style: {
-          fontSize: "20px",
-          color: "rgb(0, 123, 255)",
-          marginLeft: "5px",
-        },
-      }}
-    >
-      <BsFillCalendarWeekFill />
-    </IconContext.Provider>
-  </div>
-);
 
 function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
   const selectedStartDate = stringToDate(startDate);
@@ -40,7 +22,6 @@ function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
         showYearPicker
         onChange={(date) => setStartDate(format(date, "yyyy"))}
       />
-      <CalenderIcon />
       <span className="px-5">To</span>
       <DatePicker
         placeholderText="Select To Date"
@@ -54,7 +35,6 @@ function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
         showYearPicker
         onChange={(date) => setEndDate(format(date, "yyyy"))}
       />
-      <CalenderIcon />
     </div>
   );
 }

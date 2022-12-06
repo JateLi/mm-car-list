@@ -1,5 +1,10 @@
 import React from "react";
+import CarForm from "../components/CarForm";
 
 export default function Edit() {
-  return <div>Edit</div>;
+  return (
+    <div>
+      <CarForm />
+    </div>
+  );
 }

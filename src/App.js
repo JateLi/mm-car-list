@@ -1,9 +1,25 @@
 import "./App.css";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import List from "./pages/List";
+import Add from "./pages/Add";
+import Edit from "./pages/Edit";
+
+import DateRangePicker from "./components/DateRangePicker/DateRangePicker";
 
 function App() {
+  const [startDate, setStartDate] = useState("2015");
+  const [endDate, setEndDate] = useState("2022");
+  useEffect(() => {}, []);
+
   return (
     <div className="App">
+      <DateRangePicker
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+      />
       <Router>
         <div>
           <nav>
@@ -28,18 +44,6 @@ function App() {
       </Router>
     </div>
   );
-}
-
-function List() {
-  return <h2>List</h2>;
-}
-
-function Edit() {
-  return <h2>Edit</h2>;
-}
-
-function Add() {
-  return <h2>Add</h2>;
 }
 
 export default App;

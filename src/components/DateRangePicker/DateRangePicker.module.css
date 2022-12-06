@@ -1,0 +1,11 @@
+.datePicker {
+    flex: 1;
+    background-color: #0070f3;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-color: #9a9a9a;
+    color: #fcfcfc;
+    border-width: 1px;
+    border-radius: 5px;
+}

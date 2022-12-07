@@ -10,31 +10,43 @@ function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
 
   return (
     <div className="flex flex-row items-center">
-      <span className="pr-5">From</span>
-      <DatePicker
-        placeholderText="Select From Date"
-        selected={selectedStartDate}
-        selectsStart
-        startDate={selectedStartDate}
-        endDate={selectedEndDate}
-        className={styles.datePicker}
-        dateFormat="yyyy"
-        showYearPicker
-        onChange={(date) => setStartDate(format(date, "yyyy"))}
-      />
-      <span className="px-5">To</span>
-      <DatePicker
-        placeholderText="Select To Date"
-        selected={selectedEndDate}
-        selectsEnd
-        startDate={selectedStartDate}
-        endDate={selectedEndDate}
-        minDate={selectedStartDate}
-        className={styles.datePicker}
-        dateFormat="yyyy"
-        showYearPicker
-        onChange={(date) => setEndDate(format(date, "yyyy"))}
-      />
+      <div>
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold">
+          From
+        </label>
+        <DatePicker
+          placeholderText="Start Date"
+          selected={selectedStartDate}
+          selectsStart
+          startDate={selectedStartDate}
+          endDate={selectedEndDate}
+          className={styles.datePicker}
+          dateFormat="yyyy"
+          showYearPicker
+          onChange={(date) =>
+            setStartDate(date === null ? "" : format(date, "yyyy") ?? "")
+          }
+        />
+      </div>
+      <div className="px-5">
+        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold">
+          To
+        </label>
+        <DatePicker
+          placeholderText="End Date"
+          selected={selectedEndDate}
+          selectsEnd
+          startDate={selectedStartDate}
+          endDate={selectedEndDate}
+          minDate={selectedStartDate}
+          className={styles.datePicker}
+          dateFormat="yyyy"
+          showYearPicker
+          onChange={(date) =>
+            setEndDate(date === null ? "" : format(date, "yyyy"))
+          }
+        />
+      </div>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// import "./ListItem.module.css";
 function ListItem({ id, make, model, year, transmission, onClickEdit }) {
   return (
     <tr>

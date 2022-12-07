@@ -1,9 +1,9 @@
 import React from "react";
 
-function DropDownSelector({ optionsList, type = " " }) {
+function DropDownSelector({ optionsList, type = " ", onChange }) {
   return (
     <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">
-      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+      <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold">
         {type}
       </label>
       <div className="relative">
@@ -11,9 +11,10 @@ function DropDownSelector({ optionsList, type = " " }) {
           className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           onChange={(e) => {
             console.log(e.target.value);
+            onChange(e.target.value);
           }}
         >
-          <option>Default</option>
+          <option>all</option>
           {optionsList.map((item, id) => (
             <option key={id}>{item}</option>
           ))}

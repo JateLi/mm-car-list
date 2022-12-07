@@ -5,12 +5,17 @@ import Loader from "../components/Loader/Loader";
 import DateRangePicker from "../components/DateRangePicker/DateRangePicker";
 import DropDownSelector from "../components/DropDownSelector";
 import { carsApi } from "../Api";
+import { useMemo } from "react";
+import { checkDateInRange, removeDuplicates } from "../utils/utils";
 
 export default function ListPage() {
   const navigate = useNavigate();
-  const [carsData, setCarsData] = useState();
-  const [startDate, setStartDate] = useState("2015");
-  const [endDate, setEndDate] = useState("2022");
+  const [carsData, setCarsData] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [modelFilter, setModelFilter] = useState("all");
+  const [makeFilter, setMakeFilter] = useState("all");
+  const [transmissionFilter, setTransmissionFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
   // Fetch cars data if the local cars data is null.
@@ -35,6 +40,27 @@ export default function ListPage() {
     dataFetch().catch((error) => console.log(error));
   }, []);
 
+  const filteredList = useMemo(() => {
+    return carsData.filter(({ model, make, transmission, year }) => {
+      return (
+        (transmission === transmissionFilter || transmissionFilter === "all") &&
+        (model === modelFilter || modelFilter === "all") &&
+        (make === makeFilter || makeFilter === "all") &&
+        checkDateInRange(startDate, endDate, year)
+      );
+    });
+  }, [
+    carsData,
+    makeFilter,
+    modelFilter,
+    endDate,
+    startDate,
+    transmissionFilter,
+  ]);
+
+  const modelList = removeDuplicates(carsData.map((obj) => obj.model));
+  const makeList = removeDuplicates(carsData.map((obj) => obj.make));
+
   if (loading) return <Loader />;
   return (
     <div>
@@ -56,7 +82,18 @@ export default function ListPage() {
       >
         <DropDownSelector
           type={"Transmission"}
-          optionsList={["automatic", "manual	"]}
+          optionsList={["automatic", "manual", "tiptronic"]}
+          onChange={setTransmissionFilter}
+        />
+        <DropDownSelector
+          type={"Make"}
+          optionsList={makeList}
+          onChange={setMakeFilter}
+        />
+        <DropDownSelector
+          type={"Model"}
+          optionsList={modelList}
+          onChange={setModelFilter}
         />
         <DateRangePicker
           startDate={startDate}
@@ -86,7 +123,7 @@ export default function ListPage() {
             <th></th>
           </tr>
 
-          {carsData.map((item) => (
+          {filteredList.map((item) => (
             <ListItem
               key={item.id}
               id={item.id}

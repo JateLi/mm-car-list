@@ -1,15 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ListItem from "../components/ListItem/ListItem";
+import ListItem from "../components/ListItem";
 import Loader from "../components/Loader/Loader";
 import { carsApi } from "../Api";
 import { useMemo } from "react";
 import { checkDateInRange, removeDuplicates } from "../utils/utils";
 import ListHeader from "../components/ListHeader";
+import { useLocalStorageState } from "ahooks";
+import { useCallback } from "react";
 
 export default function ListPage() {
   const navigate = useNavigate();
-  const [carsData, setCarsData] = useState([]);
+  const [carsData, setCarsData] = useLocalStorageState(
+    "local-storage-cars-list",
+    {
+      defaultValue: [],
+    }
+  );
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [modelFilter, setModelFilter] = useState("all");
@@ -20,10 +28,9 @@ export default function ListPage() {
   // Fetch cars data if the local cars data is null.
   useEffect(() => {
     setLoading(true);
-    const localCarList = JSON.parse(localStorage.getItem("CarsList"));
-    if (localCarList) {
+
+    if (carsData.length !== 0) {
       setLoading(false);
-      setCarsData(localCarList);
       return;
     }
 
@@ -31,11 +38,10 @@ export default function ListPage() {
       const data = await (await fetch(carsApi)).json();
       setLoading(false);
       setCarsData(data);
-      localStorage.setItem("CarsList", JSON.stringify(data));
     };
 
     dataFetch().catch((error) => console.log(error));
-  }, []);
+  }, [carsData, setCarsData]);
 
   const filteredList = useMemo(() => {
     if (!carsData) return [];
@@ -56,14 +62,25 @@ export default function ListPage() {
     transmissionFilter,
   ]);
 
-  const removeItemById = (id) => {
-    const newList = carsData.filter((obj) => obj.id !== id);
-    setCarsData(newList);
-    localStorage.setItem("CarsList", JSON.stringify(newList));
-  };
+  //Remove car item from local storage by id
+  const removeItemById = useCallback(
+    (id) => {
+      const newList = carsData.filter((obj) => obj.id !== id);
+      setCarsData(newList);
+    },
+    [carsData, setCarsData]
+  );
 
-  const modelList = removeDuplicates(carsData.map((obj) => obj.model));
-  const makeList = removeDuplicates(carsData.map((obj) => obj.make));
+  //Option list for model selector
+  const modelList = useMemo(
+    () => removeDuplicates(carsData.map((obj) => obj.model)),
+    [carsData]
+  );
+  //Option list for make selector
+  const makeList = useMemo(
+    () => removeDuplicates(carsData.map((obj) => obj.make)),
+    [carsData]
+  );
 
   if (loading) return <Loader />;
   return (
@@ -71,7 +88,7 @@ export default function ListPage() {
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         type="button"
-        onClick={() => localStorage.setItem("CarsList", JSON.stringify(null))}
+        onClick={() => setCarsData([])}
       >
         Clear Local Storage
       </button>

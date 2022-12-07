@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import CarFromInput from "./CarFromInput";
 
 const inputValidate = (make, model, year, transmission) => {
-  if (make === "" || model === "" || year === "" || transmission === "")
-    return true;
-
-  return false;
+  return make === "" || model === "" || year === "" || transmission === "";
 };
 
 function CarForm({ selectedCar, onSubmitChanges }) {
@@ -22,22 +19,24 @@ function CarForm({ selectedCar, onSubmitChanges }) {
     setTransmission(selectedCar.transmission);
   }, [selectedCar]);
 
+  const handleOnChange = useCallback(
+    (e) => {
+      e.preventDefault();
+      const id = selectedCar ? selectedCar.id : "";
+      onSubmitChanges({
+        id,
+        model,
+        make,
+        year,
+        transmission,
+      });
+    },
+    [make, model, onSubmitChanges, selectedCar, transmission, year]
+  );
+
   return (
     <div>
-      <form
-        className="w-full max-w-lg"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const id = selectedCar ? selectedCar.id : "";
-          onSubmitChanges({
-            id,
-            model,
-            make,
-            year,
-            transmission,
-          });
-        }}
-      >
+      <form className="w-full max-w-lg" onSubmit={handleOnChange}>
         <div className="flex flex-wrap -mx-3 mb-6">
           <CarFromInput
             label="Make"

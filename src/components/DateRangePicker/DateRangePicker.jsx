@@ -3,10 +3,25 @@ import { format } from "date-fns";
 import { stringToDate } from "../../utils/utils";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./DateRangePicker.module.css";
+import { useCallback } from "react";
 
 function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
   const selectedStartDate = stringToDate(startDate);
   const selectedEndDate = stringToDate(endDate);
+
+  const onChangeStartDate = useCallback(
+    (date) => {
+      setStartDate(date === null ? "" : format(date, "yyyy"));
+    },
+    [setStartDate]
+  );
+
+  const onChangeEndDate = useCallback(
+    (date) => {
+      setEndDate(date === null ? "" : format(date, "yyyy"));
+    },
+    [setEndDate]
+  );
 
   return (
     <div className="flex flex-row items-center">
@@ -23,9 +38,7 @@ function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
           className={styles.datePicker}
           dateFormat="yyyy"
           showYearPicker
-          onChange={(date) =>
-            setStartDate(date === null ? "" : format(date, "yyyy") ?? "")
-          }
+          onChange={onChangeStartDate}
         />
       </div>
       <div className="px-5">
@@ -42,9 +55,7 @@ function DateRangePicker({ startDate, endDate, setStartDate, setEndDate }) {
           className={styles.datePicker}
           dateFormat="yyyy"
           showYearPicker
-          onChange={(date) =>
-            setEndDate(date === null ? "" : format(date, "yyyy"))
-          }
+          onChange={onChangeEndDate}
         />
       </div>
     </div>

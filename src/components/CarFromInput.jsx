@@ -1,5 +1,3 @@
-import React from "react";
-
 function CarFromInput({ value, holder, onChange, label, type = "text" }) {
   return (
     <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">

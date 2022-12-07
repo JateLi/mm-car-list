@@ -1,4 +1,3 @@
-import React from "react";
 import DateRangePicker from "../components/DateRangePicker/DateRangePicker";
 import DropDownSelector from "../components/DropDownSelector";
 

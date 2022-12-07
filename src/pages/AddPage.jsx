@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import { useLocalStorageState } from "ahooks";
 import { useNavigate } from "react-router-dom";
 import CarForm from "../components/CarForm";
 import { findMaxId } from "../utils/utils";
 
 export default function AddPage() {
   const navigate = useNavigate();
-  const [carsData, setCarsData] = useState([]);
-
-  useEffect(() => {
-    const localCarList = JSON.parse(localStorage.getItem("CarsList"));
-    setCarsData(localCarList);
-  }, []);
+  const [carsData, setCarsData] = useLocalStorageState(
+    "local-storage-cars-list",
+    {
+      defaultValue: [],
+    }
+  );
 
   const onSubmitChanges = (addedData) => {
     const newId = String(findMaxId(carsData) + 1);
@@ -24,10 +24,10 @@ export default function AddPage() {
         transmission: addedData.transmission,
       },
     ];
-
-    localStorage.setItem("CarsList", JSON.stringify(newCarDate));
+    setCarsData(newCarDate);
     navigate("/list");
   };
+
   return (
     <div>
       <button

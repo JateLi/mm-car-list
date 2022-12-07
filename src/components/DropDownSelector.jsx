@@ -1,5 +1,3 @@
-import React from "react";
-
 function DropDownSelector({ optionsList, type = " ", onChange }) {
   return (
     <div className="w-full md:w-1/6 px-2 mb-4 md:mb-0">

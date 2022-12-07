@@ -1,29 +1,34 @@
 import { useEffect, useState } from "react";
+import { useLocalStorageState } from "ahooks";
 import { useParams, useNavigate } from "react-router-dom";
 import CarForm from "../components/CarForm";
 
 export default function EditPage() {
   const navigate = useNavigate();
   const params = useParams();
-  const [carsData, setCarsData] = useState([]);
+  const [carsData, setCarsData] = useLocalStorageState(
+    "local-storage-cars-list",
+    {
+      defaultValue: [],
+    }
+  );
   const [selectedCar, setSelectedCar] = useState();
 
   useEffect(() => {
-    const localCarList = JSON.parse(localStorage.getItem("CarsList"));
-    setCarsData(localCarList);
-    if (localCarList) {
-      const carItem = localCarList.find(({ id }) => id === params.carId);
+    if (carsData) {
+      const carItem = carsData.find(({ id }) => id === params.carId);
       setSelectedCar(carItem);
       return;
     }
-  }, [params.carId]);
+  }, [carsData, params.carId]);
 
+  //Update edited car data to local
   const onSubmitChanges = (editData) => {
     const newCarDate = carsData.map((obj) => {
       if (obj.id === editData.id) return editData;
       return obj;
     });
-    localStorage.setItem("CarsList", JSON.stringify(newCarDate));
+    setCarsData(newCarDate);
     navigate("/list");
   };
 

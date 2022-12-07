@@ -14,6 +14,15 @@ function ListItem({ id, make, model, year, transmission, onClickEdit }) {
         >
           Edit
         </button>
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+          type="button"
+          onClick={() => {
+            console.log("delete");
+          }}
+        >
+          Delete
+        </button>
       </td>
     </tr>
   );

@@ -10,18 +10,21 @@ export default function EditPage() {
 
   useEffect(() => {
     const localCarList = JSON.parse(localStorage.getItem("CarsList"));
-    const carItem = localCarList.find(({ id }) => id === params.carId);
     setCarsData(localCarList);
-    if (carItem) {
-      console.log("Local", carItem);
-
+    if (localCarList) {
+      const carItem = localCarList.find(({ id }) => id === params.carId);
       setSelectedCar(carItem);
       return;
     }
   }, [params.carId]);
 
-  const submitChanges = (data) => {
-    localStorage.setItem("CarsList", JSON.stringify(data));
+  const onSubmitChanges = (editData) => {
+    const newCarDate = carsData.map((obj) => {
+      if (obj.id === editData.id) return editData;
+      return obj;
+    });
+    localStorage.setItem("CarsList", JSON.stringify(newCarDate));
+    navigate("/list");
   };
 
   return (
@@ -34,7 +37,9 @@ export default function EditPage() {
         Back
       </button>
       <h1 className="text-3xl font-bold">Edit Car {params.carId}</h1>
-      <CarForm selectedCar />
+      {selectedCar && (
+        <CarForm selectedCar={selectedCar} onSubmitChanges={onSubmitChanges} />
+      )}
     </div>
   );
 }

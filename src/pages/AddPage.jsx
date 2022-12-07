@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CarForm from "../components/CarForm";
+import { findMaxId } from "../utils/utils";
 
 export default function AddPage() {
   const navigate = useNavigate();
@@ -11,10 +12,22 @@ export default function AddPage() {
     setCarsData(localCarList);
   }, []);
 
-  const submitChanges = (data) => {
-    localStorage.setItem("CarsList", JSON.stringify(data));
-  };
+  const onSubmitChanges = (addedData) => {
+    const newId = String(findMaxId(carsData) + 1);
+    const newCarDate = [
+      ...carsData,
+      {
+        id: newId,
+        model: addedData.model,
+        make: addedData.make,
+        year: addedData.year,
+        transmission: addedData.transmission,
+      },
+    ];
 
+    localStorage.setItem("CarsList", JSON.stringify(newCarDate));
+    navigate("/list");
+  };
   return (
     <div>
       <button
@@ -25,7 +38,7 @@ export default function AddPage() {
         Back
       </button>
       <h1 className="text-3xl font-bold">Create a New Car</h1>
-      <CarForm />
+      <CarForm onSubmitChanges={onSubmitChanges} />
     </div>
   );
 }

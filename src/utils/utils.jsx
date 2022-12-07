@@ -20,3 +20,11 @@ export const checkDateInRange = (startDate, endDate, selectedDate) => {
 export const removeDuplicates = (arr) => {
   return [...new Set(arr)];
 };
+
+//Find max id of car item array to generate new uni for added car.
+export const findMaxId = (arr) => {
+  if (arr.length === 0) return 1;
+  const ids = arr.map((obj) => obj.id);
+  const max = Math.max(...ids);
+  return max;
+};

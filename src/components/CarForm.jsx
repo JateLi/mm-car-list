@@ -1,68 +1,83 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import CarFromInput from "./CarFromInput";
 
-function CarForm(props) {
+const inputValidate = (make, model, year, transmission) => {
+  if (make === "" || model === "" || year === "" || transmission === "")
+    return true;
+
+  return false;
+};
+
+function CarForm({ selectedCar, onSubmitChanges }) {
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
+  const [transmission, setTransmission] = useState("");
+
+  useEffect(() => {
+    if (!selectedCar) return;
+    setMake(selectedCar.make);
+    setModel(selectedCar.model);
+    setYear(selectedCar.year);
+    setTransmission(selectedCar.transmission);
+  }, [selectedCar]);
+
   return (
     <div>
       <form
         className="w-full max-w-lg"
-        onSubmit={() => {
-          console.log("On submit");
+        onSubmit={(e) => {
+          e.preventDefault();
+          const id = selectedCar ? selectedCar.id : "";
+          onSubmitChanges({
+            id,
+            model,
+            make,
+            year,
+            transmission,
+          });
         }}
       >
         <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-              Make
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder="Enter a make"
-            />
-            <p className="text-red-500 text-xs italic">
-              Please fill out this field.
-            </p>
-          </div>
-          <div className="w-full md:w-1/2 px-3">
-            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-              Model
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              type="text"
-              placeholder="Enter a model"
-            />
-          </div>
+          <CarFromInput
+            label="Make"
+            holder="Enter a make"
+            onChange={setMake}
+            value={make}
+            type="text"
+          />
+
+          <CarFromInput
+            label="Modal"
+            holder="Enter a model"
+            onChange={setModel}
+            value={model}
+            type="text"
+          />
         </div>
+
         <div className="flex flex-wrap -mx-3 mb-6">
-          <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-              Year
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder="Enter a year"
-            />
-            <p className="text-red-500 text-xs italic">
-              Please fill out this field.
-            </p>
-          </div>
-          <div className="w-full md:w-1/2 px-3">
-            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-              Transmission
-            </label>
-            <input
-              className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              type="text"
-              placeholder="Transmission"
-            />
-          </div>
+          <CarFromInput
+            label="Year"
+            holder="Enter a year"
+            onChange={setYear}
+            value={year}
+            type="number"
+          />
+
+          <CarFromInput
+            label="Transmission"
+            holder="Enter a transmission"
+            onChange={setTransmission}
+            value={transmission}
+            type="text"
+          />
         </div>
 
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           type="submit"
+          disabled={inputValidate(make, model, year, transmission)}
         >
           Submit
         </button>

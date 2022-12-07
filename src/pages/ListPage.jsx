@@ -41,6 +41,7 @@ export default function ListPage() {
   }, []);
 
   const filteredList = useMemo(() => {
+    if (!carsData) return [];
     return carsData.filter(({ model, make, transmission, year }) => {
       return (
         (transmission === transmissionFilter || transmissionFilter === "all") &&
@@ -134,6 +135,7 @@ export default function ListPage() {
               onClickEdit={() => {
                 navigate(`/edit/${item.id}`);
               }}
+              onClickDelete={() => {}}
             />
           ))}
         </tbody>

@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ListItem from "../components/ListItem/ListItem";
 import Loader from "../components/Loader/Loader";
-import DateRangePicker from "../components/DateRangePicker/DateRangePicker";
-import DropDownSelector from "../components/DropDownSelector";
 import { carsApi } from "../Api";
 import { useMemo } from "react";
 import { checkDateInRange, removeDuplicates } from "../utils/utils";
+import ListHeader from "../components/ListHeader";
 
 export default function ListPage() {
   const navigate = useNavigate();
@@ -21,10 +20,8 @@ export default function ListPage() {
   // Fetch cars data if the local cars data is null.
   useEffect(() => {
     setLoading(true);
-
     const localCarList = JSON.parse(localStorage.getItem("CarsList"));
     if (localCarList) {
-      console.log("Local", localCarList);
       setLoading(false);
       setCarsData(localCarList);
       return;
@@ -59,6 +56,12 @@ export default function ListPage() {
     transmissionFilter,
   ]);
 
+  const removeItemById = (id) => {
+    const newList = carsData.filter((obj) => obj.id !== id);
+    setCarsData(newList);
+    localStorage.setItem("CarsList", JSON.stringify(newList));
+  };
+
   const modelList = removeDuplicates(carsData.map((obj) => obj.model));
   const makeList = removeDuplicates(carsData.map((obj) => obj.make));
 
@@ -68,50 +71,23 @@ export default function ListPage() {
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         type="button"
-        onClick={() => {
-          localStorage.setItem("CarsList", JSON.stringify(null));
-        }}
+        onClick={() => localStorage.setItem("CarsList", JSON.stringify(null))}
       >
         Clear Local Storage
       </button>
       <h1 className="text-3xl font-bold">Car List</h1>
-
-      <div
-        className={
-          "flex flex-row justify-evenly items-center py-5 border-b-2 border-black"
-        }
-      >
-        <DropDownSelector
-          type={"Transmission"}
-          optionsList={["automatic", "manual", "tiptronic"]}
-          onChange={setTransmissionFilter}
-        />
-        <DropDownSelector
-          type={"Make"}
-          optionsList={makeList}
-          onChange={setMakeFilter}
-        />
-        <DropDownSelector
-          type={"Model"}
-          optionsList={modelList}
-          onChange={setModelFilter}
-        />
-        <DateRangePicker
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-        />
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          type="button"
-          onClick={() => {
-            navigate("/add");
-          }}
-        >
-          + Add
-        </button>
-      </div>
+      <ListHeader
+        setTransmissionFilter={setTransmissionFilter}
+        makeList={makeList}
+        setMakeFilter={setMakeFilter}
+        modelList={modelList}
+        setModelFilter={setModelFilter}
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        onClickAddButton={() => navigate("/add")}
+      />
 
       <table>
         <tbody>
@@ -132,10 +108,8 @@ export default function ListPage() {
               model={item.model}
               year={item.year}
               transmission={item.transmission}
-              onClickEdit={() => {
-                navigate(`/edit/${item.id}`);
-              }}
-              onClickDelete={() => {}}
+              onClickEdit={() => navigate(`/edit/${item.id}`)}
+              onClickDelete={() => removeItemById(item.id)}
             />
           ))}
         </tbody>

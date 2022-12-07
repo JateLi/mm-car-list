@@ -1,4 +1,12 @@
-function ListItem({ id, make, model, year, transmission, onClickEdit }) {
+function ListItem({
+  id,
+  make,
+  model,
+  year,
+  transmission,
+  onClickEdit,
+  onClickDelete,
+}) {
   return (
     <tr>
       <td>{id}</td>
@@ -17,9 +25,7 @@ function ListItem({ id, make, model, year, transmission, onClickEdit }) {
         <button
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
           type="button"
-          onClick={() => {
-            console.log("delete");
-          }}
+          onClick={onClickDelete}
         >
           Delete
         </button>

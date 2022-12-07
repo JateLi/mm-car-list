@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import CarFromInput from "./CarFromInput";
 
 const inputValidate = (make, model, year, transmission) => {
+  if (year > new Date().getFullYear()) return true;
   return make === "" || model === "" || year === "" || transmission === "";
 };
 
